@@ -1,10 +1,23 @@
+import os
 import gradio as gr
 import requests
 
-BACKEND_URL = "http://localhost:8000"
+def chat(message):
+    if not message:
+        return "پیامی وارد نکردی 🙂"
+    return f"شما گفتید: {message}"
 
-def chat(msg, history):
-    r = requests.post(f"{BACKEND_URL}/chat", json={"message": msg}).json()
-    return history + [(msg, r["reply"])]
+demo = gr.Interface(
+    fn=chat,
+    inputs=gr.Textbox(label="پیام شما"),
+    outputs=gr.Textbox(label="پاسخ"),
+    title="هوش مصنوعی شخصی",
+    description="نسخه تست روی Render"
+)
 
-gr.ChatInterface(chat, title="Personal AI").launch()
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000))
+    demo.launch(
+        server_name="0.0.0.0",
+        server_port=port
+    )
