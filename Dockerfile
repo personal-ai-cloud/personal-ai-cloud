@@ -1,5 +1,12 @@
 FROM python:3.11-slim
+
 WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
 COPY . .
-RUN pip install -r requirements.txt
-CMD ["python", "gradio_app.py"]
+
+EXPOSE 10000
+
+CMD ["python", "main.py"]
