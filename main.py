@@ -24,7 +24,24 @@ import json
 
 MEMORY_FILE = "memory.json"
 
-def load_memory():
+def load_memory():memory = load_memory()
+
+# اگر اسم کاربر خالیه، بپرس و ذخیره کن
+if memory["name"] == "":
+    memory["name"] = prompt.message  # فرض می‌کنیم اولین پیام اسم است
+    save_memory(memory)
+    return {"reply": f"خیلی خوشوقتم، {memory['name']}! از این به بعد شما رو یادم می‌مونم."}
+
+# پاسخ AI بر اساس حافظه
+user_name = memory["name"]
+response = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        {"role": "system", "content": f"You are a helpful AI assistant that knows the user's name is {user_name}."},
+        {"role": "user", "content": prompt.message}
+    ]
+)
+return {"reply": response.choices[0].message.content}
     try:
         with open(MEMORY_FILE, "r") as f:
             return json.load(f)
