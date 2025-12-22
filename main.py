@@ -1,4 +1,12 @@
-from fastapi import FastAPI
+app = FastAPI()
+
+@app.get("/")
+def root():
+    return {"status": "AI backend is running"}
+
+@app.post("/chat")
+def chat(prompt: Prompt):
+    ...from fastapi import FastAPI
 from pydantic import BaseModel
 from openai import OpenAI
 import os
