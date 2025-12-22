@@ -1,5 +1,6 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 import os
 import json
 from openai import OpenAI
@@ -7,10 +8,16 @@ from openai import OpenAI
 # ----------------------------
 # تنظیمات اولیه
 # ----------------------------
-app = FastAPI()
+app = FastAPI(title="Personal AI Cloud")
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 MEMORY_FILE = "memory.json"
+
+# ----------------------------
+# مدل Pydantic برای دریافت پیام کاربر
+# ----------------------------
+class UserMessage(BaseModel):
+    message: str
 
 # ----------------------------
 # توابع حافظه
@@ -36,10 +43,8 @@ def root():
 # چت با حافظه شخصی
 # ----------------------------
 @app.post("/chat")
-async def chat(request: Request):
-    data = await request.json()
-    user_message = data.get("message", "").strip()
-
+async def chat(data: UserMessage):
+    user_message = data.message.strip()
     memory = load_memory()
 
     # اگر اسم ذخیره نشده
