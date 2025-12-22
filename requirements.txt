@@ -4,3 +4,5 @@ openai
 gradio
 python-dotenv
 requests
+sqlalchemy
+gTTS
